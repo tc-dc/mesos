@@ -1109,7 +1109,8 @@ Future<bool> DockerContainerizerProcess::launch(
       taskInfo,
       executorInfo,
       directory,
-      slaveId));
+      slaveId,
+      slavePid));
 }
 
 
@@ -1118,7 +1119,8 @@ Future<bool> DockerContainerizerProcess::_launch(
     const Option<TaskInfo>& taskInfo,
     const ExecutorInfo& executorInfo,
     const string& directory,
-    const SlaveID& slaveId)
+    const SlaveID& slaveId,
+    const PID<Slave>& slavePid)
 {
   if (!containers_.contains(containerId)) {
     return Failure("Container is already destroyed");
@@ -1193,7 +1195,7 @@ Future<bool> DockerContainerizerProcess::_launch(
         if (executorInfo.has_command() && executorInfo.command().has_user()) {
           return getRoleUid(executorInfo.command().user())
             .then(defer(self(), [=](const std::string& roleUid) {
-              container.get()->environment["MESOS_COMMAND_UID"] =
+              container->environment["MESOS_COMMAND_UID"] =
                 strings::trim(roleUid);
               return Nothing();
             }));

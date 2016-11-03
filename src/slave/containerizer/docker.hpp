@@ -185,7 +185,8 @@ private:
       const Option<TaskInfo>& taskInfo,
       const ExecutorInfo& executorInfo,
       const std::string& directory,
-      const SlaveID& slaveId);
+      const SlaveID& slaveId,
+      const PID<Slave>& slavePid);
 
   process::Future<Nothing> _recover(
       const Option<state::SlaveState>& state,
